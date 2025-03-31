@@ -47,12 +47,16 @@
     <TextView
         android:id="@+id/mensaje"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="28dp"
         android:text=""
-        android:textSize="20sp"
         android:textColor="@android:color/holo_green_light"
-        tools:layout_editor_absoluteX="178dp"
-        tools:layout_editor_absoluteY="490dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/boton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/boton"
+        app:layout_constraintTop_toBottomOf="@+id/boton"
+        app:layout_constraintVertical_bias="0.107"
         tools:ignore="MissingConstraints" />
 
 
