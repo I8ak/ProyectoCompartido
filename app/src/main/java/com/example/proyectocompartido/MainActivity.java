@@ -21,6 +21,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity {
     private EditText textUser;
     private EditText textPass;
@@ -35,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
         textPass= findViewById(R.id.password);
         texto = findViewById(R.id.mensaje);
         button=findViewById(R.id.boton);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://localhost/pruebaApp/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+
         button.setOnClickListener(v -> {
             JSONObject json=new JSONObject();
             try {
@@ -47,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
             new Lanzar(linea).start();
 
         });
-
 
     }
     private class Lanzar extends  Thread{
