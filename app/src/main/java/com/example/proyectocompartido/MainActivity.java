@@ -1,6 +1,7 @@
 package com.example.proyectocompartido;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -47,13 +48,17 @@ public class MainActivity extends AppCompatActivity {
 
         button.setOnClickListener(v -> {
             JSONObject json=new JSONObject();
+            char VT = 11;
+            char FS = 28;
+            char CR = 13;
             try {
                 json.put("user",textUser.getText());
                 json.put("password",textPass.getText());
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
-            String linea = json.toString().replaceAll("\\s+","");
+            String linea = VT+json.toString().replaceAll("\\s+","")+FS+CR;
+            Log.i("MENSAJE",linea);
             new Lanzar(linea).start();
 
         });
@@ -68,12 +73,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             String respuesta="";
-            try(Socket socket=new Socket("10.0.2.2",12345);
+            try(Socket socket=new Socket("10.35.50.32",33333);
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                 out.println(mensaje);
                 out.flush();
+
                 respuesta=in.readLine();
+                Log.i("MENSAJE",respuesta);
                 final String finalRespuesta =respuesta ;
                 runOnUiThread(() -> texto.setText(finalRespuesta));
 
