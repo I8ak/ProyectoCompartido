@@ -1,27 +1,17 @@
 package com.example.proyectocompartido;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -41,54 +31,43 @@ public class MainActivity extends AppCompatActivity {
         button=findViewById(R.id.boton);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://localhost/pruebaApp/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                                .build();
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
 
         button.setOnClickListener(v -> {
-            JSONObject json=new JSONObject();
-            char VT = 11;
-            char FS = 28;
-            char CR = 13;
-            try {
-                json.put("user",textUser.getText());
-                json.put("password",textPass.getText());
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-            String linea = VT+json.toString().replaceAll("\\s+","")+FS+CR;
-            Log.i("MENSAJE",linea);
-            new Lanzar(linea).start();
+            String usuario = textUser.getText().toString();
+            String contrasenia = textPass.getText().toString();
 
+            Call<Response> call = apiService.verificarUsuario(usuario, contrasenia);
+
+            if (usuario.isEmpty() || contrasenia.isEmpty()) {
+                Toast.makeText(MainActivity.this, "Por favor ingresa usuario y contraseña", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            call.enqueue(new Callback<Response>() {
+                @Override
+                public void onResponse(Call<Response> call, Response<Response> response) {
+                    if (response.isSuccessful()) {
+                        // Verificar si la respuesta fue exitosa
+                        Response respuesta = response.body();
+                        if (respuesta != null && respuesta.isSuccessful()) {
+                            texto.setText("¡Usuario autenticado!");
+                        } else {
+                            texto.setText("Usuario o contraseña incorrectos");
+                        }
+                    } else {
+                        texto.setText("Error al comunicarse con el servidor");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Response> call, Throwable t) {
+                    texto.setText("Fallo en la conexión");
+                }
+            });
         });
-
-    }
-    private class Lanzar extends  Thread{
-        private String mensaje;
-        public Lanzar(String mensaje){
-            this.mensaje=mensaje;
-        }
-
-        @Override
-        public void run() {
-            String respuesta="";
-            try(Socket socket=new Socket("10.35.50.32",33333);
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-                out.println(mensaje);
-                out.flush();
-
-                respuesta=in.readLine();
-                Log.i("MENSAJE",respuesta);
-                final String finalRespuesta =respuesta ;
-                runOnUiThread(() -> texto.setText(finalRespuesta));
-
-            } catch (UnknownHostException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 }

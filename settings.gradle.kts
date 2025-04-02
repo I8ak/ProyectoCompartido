@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "ProyectoCompartido"
 include(":app")
- 
+include(":app:home")
