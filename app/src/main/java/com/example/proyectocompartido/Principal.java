@@ -74,7 +74,13 @@ protected void onActivityResult(int requestCode, int resultCode, @Nullable Inten
     super.onActivityResult(requestCode, resultCode, data);
     if(resultCode == RESULT_OK){
         String barcode = data.getStringExtra(Intents.Scan.RESULT);
-        Toast.makeText(this,"Resultado: " + barcode,Toast.LENGTH_LONG).show();
+       // Toast.makeText(this,"Resultado: " + barcode,Toast.LENGTH_LONG).show();
+        if(barcode.equals("76060406")){
+            Intent intent = new Intent(Principal.this,Medicinas.class);
+            startActivity(intent);
+        }else{
+            Toast.makeText(this,"Paciente no encontrado",Toast.LENGTH_LONG).show();
+        }
     }
 }
 }
