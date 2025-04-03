@@ -27,9 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoCompartido"
         tools:targetApi="31">
-        <activity
-        android:name="com.journeyapps.barcodescanner.CaptureActivity"
-        android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
         <activity
             android:name=".Principal"
             android:exported="false" />

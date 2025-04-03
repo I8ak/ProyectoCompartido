@@ -44,5 +44,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 }

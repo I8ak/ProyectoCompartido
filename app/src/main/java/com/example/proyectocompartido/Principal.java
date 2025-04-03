@@ -15,6 +15,7 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,6 +26,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import com.google.zxing.client.android.Intents;
+import com.journeyapps.barcodescanner.CaptureActivity;
 
 import java.io.IOException;
 import java.util.List;
@@ -61,17 +64,17 @@ public class Principal extends AppCompatActivity {
 
     }
     private void abrirCamara() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        if (intent.resolveActivity(getPackageManager()) != null) {
-
-            Log.i("MENSAJE","ha entrado a la camara");
-            cameraLauncher.launch(intent);
-        }else {
-            Log.i("MENSAJE","No ha entrado a la camara");
-        }
+        Intent intent = new Intent(Principal.this, CaptureActivity.class);
+        startActivityForResult(intent, 0);
     }
 
 
-
+@Override
+protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if(resultCode == RESULT_OK){
+        String barcode = data.getStringExtra(Intents.Scan.RESULT);
+        Toast.makeText(this,"Encontrado: " + barcode,Toast.LENGTH_LONG).show();
+    }
+}
 }
