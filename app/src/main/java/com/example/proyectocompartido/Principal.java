@@ -74,7 +74,7 @@ protected void onActivityResult(int requestCode, int resultCode, @Nullable Inten
     super.onActivityResult(requestCode, resultCode, data);
     if(resultCode == RESULT_OK){
         String barcode = data.getStringExtra(Intents.Scan.RESULT);
-        Toast.makeText(this,"Encontrado: " + barcode,Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Resultado: " + barcode,Toast.LENGTH_LONG).show();
     }
 }
 }
