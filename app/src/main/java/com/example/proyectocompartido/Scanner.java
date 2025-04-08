@@ -38,8 +38,6 @@ public class Scanner extends AppCompatActivity {
     private static String barcodePaciente;
     private boolean escaneoHecho = false;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

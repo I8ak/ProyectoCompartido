@@ -1,8 +1,6 @@
 package com.example.proyectocompartido;
 
-import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +12,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Lanzar extends  Thread{
+public class Lanzar extends Thread{
     private String mensaje;
     private Callback callback;
 
