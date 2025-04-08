@@ -32,7 +32,7 @@ public class Medicinas extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_medicinas);
 
-        barcodePaciente=getIntent().getStringExtra("codBarPaciente");
+        barcodePaciente=getIntent().getStringExtra("codEscaneado");
         Button button=findViewById(R.id.butonMedicina);
         button.setOnClickListener(v ->{
                     Log.i("MENSAJE","ha entrado a la camara");

@@ -1,55 +1,57 @@
 package com.example.proyectocompartido;
 
-import android.Manifest;
+
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
-
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
+import com.google.zxing.client.android.Intents;
+import com.journeyapps.barcodescanner.CaptureActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
-import java.util.List;
 
 public class Scanner extends AppCompatActivity {
-
-    private PreviewView previewView;
     private BarcodeScanner scanner;
+    private PreviewView previewView;
+    private static String barcodePaciente;
+    private boolean escaneoHecho = false;
 
-    @SuppressLint("MissingInflatedId")
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_scanner);
         previewView = findViewById(R.id.previewView);
+        barcodePaciente=getIntent().getStringExtra("codBarPaciente");
         scanner = BarcodeScanning.getClient();
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            startCamera();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1001);
-        }
+            Log.i("MENSAJE","ha entrado a la camara");
+            abrirCamara();
     }
-
-    private void startCamera() {
+    private void abrirCamara() {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
         cameraProviderFuture.addListener(() -> {
@@ -58,6 +60,7 @@ public class Scanner extends AppCompatActivity {
 
                 Preview preview = new Preview.Builder().build();
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
 
                 ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
                         .build();
@@ -71,12 +74,17 @@ public class Scanner extends AppCompatActivity {
                         scanner.process(image)
                                 .addOnSuccessListener(barcodes -> {
                                     for (Barcode barcode : barcodes) {
-                                        String value = barcode.getRawValue();
-                                        if (value != null) {
-                                            Toast.makeText(this, "QR: " + value, Toast.LENGTH_SHORT).show();
-                                            // Puedes cerrar la actividad, abrir otra, etc.
-                                            // finish(); o navegar a otro intent
+                                        if (!escaneoHecho) {
+                                            escaneoHecho = true;
+                                            String value = barcode.getRawValue();
+                                            if (value != null) {
+                                                Intent intent = new Intent(Scanner.this, Medicinas.class);
+                                                intent.putExtra("codEscaneado", value);
+                                                startActivity(intent);
+                                                finish(); // Cierra la pantalla de escaneo
+                                            }
                                         }
+
                                     }
                                 })
                                 .addOnFailureListener(e -> Log.e("Scanner", "Error al escanear", e))
@@ -98,13 +106,20 @@ public class Scanner extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1001 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startCamera();
+            abrirCamara();
         } else {
-            Toast.makeText(this, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show();
+            if (!isFinishing() && !isDestroyed()) {
+                Toast.makeText(this, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
+
+
+
 }

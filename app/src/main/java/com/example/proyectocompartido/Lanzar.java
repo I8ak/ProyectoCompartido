@@ -35,7 +35,7 @@ public class Lanzar extends  Thread{
         String ipAlexis="10.245.91.142";
         String iplocal="10.0.2.2";
         Log.i("MENSAJE",mensaje);
-        try(Socket socket=new Socket(ipalvar,33334);
+        try(Socket socket=new Socket(iplocal,12345);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
