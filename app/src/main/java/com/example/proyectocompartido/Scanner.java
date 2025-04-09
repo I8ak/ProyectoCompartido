@@ -38,13 +38,13 @@ public class Scanner extends AppCompatActivity {
     private static String barcodePaciente;
     private boolean escaneoHecho = false;
 
+    @SuppressLint("SuspiciousIndentation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_scanner);
         previewView = findViewById(R.id.previewView);
-        barcodePaciente=getIntent().getStringExtra("codBarPaciente");
         scanner = BarcodeScanning.getClient();
             Log.i("MENSAJE","ha entrado a la camara");
             abrirCamara();
@@ -78,11 +78,11 @@ public class Scanner extends AppCompatActivity {
                                             if (value != null) {
                                                 Intent intent = new Intent(Scanner.this, Medicinas.class);
                                                 intent.putExtra("codEscaneado", value);
+                                                intent.putExtra("usuario",getIntent().getStringExtra("usuario"));
                                                 startActivity(intent);
-                                                finish(); // Cierra la pantalla de escaneo
+                                                finish();
                                             }
                                         }
-
                                     }
                                 })
                                 .addOnFailureListener(e -> Log.e("Scanner", "Error al escanear", e))

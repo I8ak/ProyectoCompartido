@@ -51,37 +51,63 @@ public class MainActivity extends AppCompatActivity {
 //                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_MUTABLE);
 
         button.setOnClickListener(v -> {
-            JSONObject json=new JSONObject();
-            char VT = 11;
-            char FS = 28;
-            char CR = 13;
-            String user = textUser.getText().toString().trim();
-            String password = textPass.getText().toString().trim();
-            if (user.isEmpty() || password.isEmpty()) {
-                Toast.makeText(MainActivity.this, "Usuario o contraseña vacíos", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            try {
-                json.put("user", user);
-                json.put("password", password);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-            String linea = VT+json.toString().replaceAll("\\s+","")+FS+CR;
-            Log.i("MENSAJE",linea);
-//            new Lanzar(linea, exito -> runOnUiThread(() -> {
-//                if (exito) {
-                    Toast.makeText(MainActivity.this, "Usuario correcto", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(MainActivity.this, Principal.class);
-                    startActivity(intent);
-//                } else {
-//                    Toast.makeText(MainActivity.this, "Usuario o contraseña incorrecto", Toast.LENGTH_LONG).show();
-//                }
-//            })).start();
+            validarLogin();
+
         });
 
 
 
+    }
+    public void validarLogin(){
+        JSONObject json=new JSONObject();
+        char VT = 11;
+        char FS = 28;
+        char CR = 13;
+        String user = textUser.getText().toString().trim();
+        String password = textPass.getText().toString().trim();
+        if (user.isEmpty() || password.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Usuario o contraseña vacíos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            json.put("user", user);
+            json.put("password", password);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        String linea = VT+json.toString().replaceAll("\\s+","")+FS+CR;
+        Log.i("MENSAJE",linea);
+        new Lanzar(linea,33333, respuestaServidor -> runOnUiThread(() -> {
+            manejarRespuestaServidor(respuestaServidor);
+        })).start();
+
+    }
+    private void manejarRespuestaServidor(String respuesta) {
+        try {
+            JSONObject json = new JSONObject(respuesta);
+            String error = json.optString("error", null);
+
+            if (error != null && !error.equals("null") ) {
+                mostrarPopupError(error);
+            } else {
+                Toast.makeText(this, "Usuario correcto", Toast.LENGTH_LONG).show();
+                Intent intent=new Intent(MainActivity.this,Principal.class);
+                intent.putExtra("usuario",textUser.getText().toString().trim());
+                startActivity(intent);
+            }
+
+        } catch (JSONException e) {
+            Toast.makeText(this, "Error procesando la respuesta del servidor", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+    }
+    private void mostrarPopupError(String mensajeError) {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Error de validación")
+                .setMessage(mensajeError)
+                .setPositiveButton("Aceptar", null)
+                .setCancelable(true)
+                .show();
     }
 
 //    @Override

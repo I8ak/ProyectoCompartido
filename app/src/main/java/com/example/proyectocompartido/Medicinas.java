@@ -9,99 +9,110 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import com.google.zxing.client.android.Intents;
-import com.journeyapps.barcodescanner.CaptureActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Medicinas extends AppCompatActivity {
-    private static String barcodeMedicina;
+
     private static String barcodePaciente;
+    private static String usuario;
+    private String barcodeMedicina;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_medicinas);
+        usuario =getIntent().getStringExtra("usuario");
+        // Recoger código escaneado del paciente una sola vez
+        if (barcodePaciente == null) {
+            barcodePaciente = getIntent().getStringExtra("codEscaneado");
+            Log.i("mensaje",barcodePaciente+" uduario "+usuario);
+        }else {
+            barcodeMedicina = getIntent().getStringExtra("codEscaneado");
+            Log.i("mensaje",barcodeMedicina);
+            validarMedicina();
+        }
 
-        barcodePaciente=getIntent().getStringExtra("codEscaneado");
-        Button button=findViewById(R.id.butonMedicina);
-        button.setOnClickListener(v ->{
-                    Log.i("MENSAJE","ha entrado a la camara");
-                    abrirCamara();
-                }
-        );
+        Button button = findViewById(R.id.butonMedicina);
+        button.setOnClickListener(v -> {
+                Intent intent = new Intent(Medicinas.this, Scanner.class);
+                startActivity(intent);
+
+            // Lanzar la actividad Scanner para escanear la medicina
+
+        });
     }
 
-    private void abrirCamara() {
-        Intent intent = new Intent(Medicinas.this, CaptureActivity.class);
-        startActivityForResult(intent, 0);
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == REQUEST_SCAN && resultCode == RESULT_OK && data != null) {
+//            // Aquí recibimos el código escaneado de Scanner
+//            barcodeMedicina = data.getStringExtra("codEscaneado");
+//            Log.i("mensaje", barcodeMedicina);
+//            validarMedicina();
+//        }
+//    }
+
+    private void validarMedicina() {
+        LocalDateTime fechaEnvio = LocalDateTime.now();
+        String fechaFormateada = fechaEnvio.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String fechaCaducidad=null;
+        char VT = 11;
+        char FS = 28;
+        char CR = 13;
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("usuario", usuario);
+            json.put("operacion", "validar");
+            json.put("nhc", barcodePaciente);
+            json.put("codBarMedicina1", barcodeMedicina);
+            json.put("codBarMedicina2", JSONObject.NULL);
+            json.put("fechaCad", fechaCaducidad != null ? fechaCaducidad : JSONObject.NULL);
+            json.put("fechaEnvio", fechaFormateada);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        String linea = json.toString().replaceAll("\\s+", "");
+        linea = VT + linea + FS + CR;
+
+        new Lanzar(linea,33334, respuestaServidor -> runOnUiThread(() -> {
+            manejarRespuestaServidor(respuestaServidor);
+        })).start();
     }
 
+    private void manejarRespuestaServidor(String respuesta) {
+        try {
+            JSONObject json = new JSONObject(respuesta);
+            String resultado = json.optString("resultado", null);
+            String error = json.optString("error", null);
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            barcodeMedicina = data.getStringExtra(Intents.Scan.RESULT);
-            String codigoMedicamento=barcodeMedicina;
-            codigoMedicamento = codigoMedicamento.replaceAll("^\u001d+", "");
-            String[] codigoPartido=codigoMedicamento.split("\u001d");
-            String fechaCad=null,codNacional3=null,codNacional2=null;
-            if(codigoPartido.length==3){
-                fechaCad=codigoPartido[2].substring(2, 8);
-                codNacional3=codigoPartido[2].substring(11);
-            }else if(codigoPartido.length==2){
-                fechaCad=codigoPartido[1].substring(2, 8);
-                codNacional2=codigoPartido[0].substring(9,16);
+            if (error != null && !error.equals("null") && (resultado == null || !resultado.equalsIgnoreCase("OK"))) {
+                mostrarPopupError(error);
+            } else {
+                Toast.makeText(this, "Medicina correcta", Toast.LENGTH_LONG).show();
             }
-            LocalDateTime fechaEnvio=LocalDateTime.now();
-            String fechaFormateada=fechaEnvio.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            char VT = 11;
-            char FS = 28;
-            char CR = 13;
-            JSONObject jsonsCodBar=new JSONObject();
-            try {
 
-                jsonsCodBar.put("codBarPaciente",barcodePaciente);
-                jsonsCodBar.put("codBarMedicina2", codNacional2 != null ? codNacional2 : JSONObject.NULL);
-                jsonsCodBar.put("codBarMedicina3", codNacional3 != null ? codNacional3 : JSONObject.NULL);
-                jsonsCodBar.put("fechaCad",fechaCad);
-                jsonsCodBar.put("fechaEnvio",fechaFormateada);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-            String linea = jsonsCodBar.toString().replaceAll("\\s+","");
-            linea=VT+linea+FS+CR;
-          new Lanzar(linea, exito -> runOnUiThread(() -> {
-
-                    Toast.makeText(Medicinas.this, exito?"Medicina correcta":"Medicina incorrecta", Toast.LENGTH_LONG).show();
-
-            })).start();
+        } catch (JSONException e) {
+            Toast.makeText(this, "Error procesando la respuesta del servidor", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
-    public static String getBarcodeMedicina() {
-        return barcodeMedicina;
-    }
-
-    public static void setBarcodeMedicina(String barcodeMedicina) {
-        Medicinas.barcodeMedicina = barcodeMedicina;
-    }
-
-    public static String getBarcodePaciente() {
-        return barcodePaciente;
-    }
-
-    public static void setBarcodePaciente(String barcodePaciente) {
-        Medicinas.barcodePaciente = barcodePaciente;
+    private void mostrarPopupError(String mensajeError) {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Error de validación")
+                .setMessage(mensajeError)
+                .setPositiveButton("Aceptar", null)
+                .setCancelable(true)
+                .show();
     }
 }

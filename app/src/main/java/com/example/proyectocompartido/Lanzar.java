@@ -11,18 +11,21 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.function.Consumer;
 
 public class Lanzar extends Thread{
     private String mensaje;
-    private Callback callback;
+    private Consumer<String>  callback;
+    private int puerto;
 
     public interface Callback {
         void onResult(boolean exito);
     }
 
-    public Lanzar(String mensaje, Callback callback) {
+    public Lanzar(String mensaje,int puerto , Consumer<String> callback) {
         this.mensaje = mensaje;
         this.callback = callback;
+        this.puerto=puerto;
     }
 
 
@@ -33,7 +36,7 @@ public class Lanzar extends Thread{
         String ipAlexis="10.245.91.142";
         String iplocal="10.0.2.2";
         Log.i("MENSAJE",mensaje);
-        try(Socket socket=new Socket(iplocal,12345);
+        try(Socket socket=new Socket(ipalvar,puerto);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
@@ -47,21 +50,22 @@ public class Lanzar extends Thread{
                 respuesta=in.readLine();
                 respuesta = respuesta.replaceAll("[\\u000B\\u001C\\u000D]", "").trim();
                 Log.i("MENSAJE","Respuesta: "+respuesta);
-                JSONObject jsonRespuesta=new JSONObject(respuesta);
-                String error = jsonRespuesta.optString("error");
-
-                boolean exito = (error.equalsIgnoreCase("ok"));
-
                 if (callback != null) {
-                    callback.onResult(exito);
+                    callback.accept(respuesta);
                 }
                 Log.i("MensjaeEnviado",mensaje);
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
     }
 }
