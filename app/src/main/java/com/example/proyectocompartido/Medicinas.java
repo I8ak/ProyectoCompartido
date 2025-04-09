@@ -62,7 +62,7 @@ public class Medicinas extends AppCompatActivity {
 
     private void validarMedicina() {
         LocalDateTime fechaEnvio = LocalDateTime.now();
-        String fechaFormateada = fechaEnvio.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String fechaFormateada = fechaEnvio.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         String fechaCaducidad=null;
         char VT = 11;
         char FS = 28;
