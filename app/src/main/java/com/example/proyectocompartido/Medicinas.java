@@ -32,7 +32,6 @@ public class Medicinas extends AppCompatActivity {
             usuario =user;
         }
 
-        // Recoger código escaneado del paciente una sola vez
         if (barcodePaciente == null) {
             barcodePaciente = getIntent().getStringExtra("codEscaneado");
             Log.i("mensaje",barcodePaciente+" uduario "+usuario);
@@ -46,23 +45,10 @@ public class Medicinas extends AppCompatActivity {
         button.setOnClickListener(v -> {
                 Intent intent = new Intent(Medicinas.this, Scanner.class);
                 startActivity(intent);
-
-            // Lanzar la actividad Scanner para escanear la medicina
-
         });
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == REQUEST_SCAN && resultCode == RESULT_OK && data != null) {
-//            // Aquí recibimos el código escaneado de Scanner
-//            barcodeMedicina = data.getStringExtra("codEscaneado");
-//            Log.i("mensaje", barcodeMedicina);
-//            validarMedicina();
-//        }
-//    }
+
 
     private void validarMedicina() {
         LocalDateTime fechaEnvio = LocalDateTime.now();

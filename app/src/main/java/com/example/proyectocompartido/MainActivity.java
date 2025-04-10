@@ -23,13 +23,10 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
     private EditText textUser;
     private EditText textPass;
-    private TextView texto;
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
     private String codbarPaciente;
-//    public MainActivity(String codbarPaciente){
-//        this.codbarPaciente=codbarPaciente;
-//    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         textUser= findViewById(R.id.usuario);
         textPass= findViewById(R.id.password);
-        texto = findViewById(R.id.mensaje);
         Button button = findViewById(R.id.boton);
 
 //        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -52,11 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         button.setOnClickListener(v -> {
             validarLogin();
-
         });
-
-
-
     }
     public void validarLogin(){
         JSONObject json=new JSONObject();
@@ -80,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         new Lanzar(linea,33333, respuestaServidor -> runOnUiThread(() -> {
             manejarRespuestaServidor(respuestaServidor);
         })).start();
-
     }
     private void manejarRespuestaServidor(String respuesta) {
         try {
@@ -95,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("usuario",textUser.getText().toString().trim());
                 startActivity(intent);
             }
-
         } catch (JSONException e) {
             Toast.makeText(this, "Error procesando la respuesta del servidor", Toast.LENGTH_LONG).show();
             e.printStackTrace();

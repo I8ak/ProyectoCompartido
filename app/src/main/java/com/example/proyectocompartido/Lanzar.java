@@ -18,9 +18,6 @@ public class Lanzar extends Thread{
     private Consumer<String>  callback;
     private int puerto;
 
-    public interface Callback {
-        void onResult(boolean exito);
-    }
 
     public Lanzar(String mensaje,int puerto , Consumer<String> callback) {
         this.mensaje = mensaje;
