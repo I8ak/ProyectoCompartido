@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 
 public class Scanner extends AppCompatActivity {
     private BarcodeScanner scanner;
+    private static String usuario;
     private PreviewView previewView;
     private static String barcodePaciente;
     private boolean escaneoHecho = false;
@@ -45,6 +46,8 @@ public class Scanner extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_scanner);
         previewView = findViewById(R.id.previewView);
+
+        usuario=getIntent().getStringExtra("usuario");
         scanner = BarcodeScanning.getClient();
             Log.i("MENSAJE","ha entrado a la camara");
             abrirCamara();
@@ -78,7 +81,10 @@ public class Scanner extends AppCompatActivity {
                                             if (value != null) {
                                                 Intent intent = new Intent(Scanner.this, Medicinas.class);
                                                 intent.putExtra("codEscaneado", value);
-                                                intent.putExtra("usuario",getIntent().getStringExtra("usuario"));
+                                                if (usuario!=null){
+
+                                                    intent.putExtra("usuario",usuario);
+                                                }
                                                 startActivity(intent);
                                                 finish();
                                             }

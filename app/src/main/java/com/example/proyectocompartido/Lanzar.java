@@ -39,7 +39,7 @@ public class Lanzar extends Thread{
         try(Socket socket=new Socket(ipalvar,puerto);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-
+            Log.i("mensaje", String.valueOf(socket.getLocalPort()));
             if (mensaje == null) {
                 Log.i("MENSAJE", "Mensaje es null antes de enviarlo");
             } else {
@@ -59,13 +59,5 @@ public class Lanzar extends Thread{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public String getMensaje() {
-        return mensaje;
-    }
-
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
     }
 }

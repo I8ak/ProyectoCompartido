@@ -27,14 +27,18 @@ public class Medicinas extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_medicinas);
-        usuario =getIntent().getStringExtra("usuario");
+        String user=getIntent().getStringExtra("usuario");
+        if (user!=null){
+            usuario =user;
+        }
+
         // Recoger código escaneado del paciente una sola vez
         if (barcodePaciente == null) {
             barcodePaciente = getIntent().getStringExtra("codEscaneado");
             Log.i("mensaje",barcodePaciente+" uduario "+usuario);
         }else {
             barcodeMedicina = getIntent().getStringExtra("codEscaneado");
-            Log.i("mensaje",barcodeMedicina);
+            Log.i("mensaje",barcodeMedicina+" usuario "+usuario);
             validarMedicina();
         }
 
@@ -75,7 +79,7 @@ public class Medicinas extends AppCompatActivity {
             json.put("nhc", barcodePaciente);
             json.put("codBarMedicina1", barcodeMedicina);
             json.put("codBarMedicina2", JSONObject.NULL);
-            json.put("fechaCad", fechaCaducidad != null ? fechaCaducidad : JSONObject.NULL);
+            json.put("fechaCad", JSONObject.NULL);
             json.put("fechaEnvio", fechaFormateada);
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -84,7 +88,7 @@ public class Medicinas extends AppCompatActivity {
         String linea = json.toString().replaceAll("\\s+", "");
         linea = VT + linea + FS + CR;
 
-        new Lanzar(linea,33334, respuestaServidor -> runOnUiThread(() -> {
+        new Lanzar(linea,33335, respuestaServidor -> runOnUiThread(() -> {
             manejarRespuestaServidor(respuestaServidor);
         })).start();
     }
@@ -99,6 +103,9 @@ public class Medicinas extends AppCompatActivity {
                 mostrarPopupError(error);
             } else {
                 Toast.makeText(this, "Medicina correcta", Toast.LENGTH_LONG).show();
+                Intent intent=new Intent(Medicinas.this,AdministrarMedicina.class);
+                intent.putExtra("respuesta",respuesta);
+                startActivity(intent);
             }
 
         } catch (JSONException e) {
