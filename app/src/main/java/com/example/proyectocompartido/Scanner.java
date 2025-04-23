@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.Manifest;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
@@ -18,6 +19,7 @@ import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -49,8 +51,12 @@ public class Scanner extends AppCompatActivity {
 
         usuario=getIntent().getStringExtra("usuario");
         scanner = BarcodeScanning.getClient();
-            Log.i("MENSAJE","ha entrado a la camara");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1001);
+        } else {
+            Log.i("MENSAJE", "ha entrado a la camara");
             abrirCamara();
+        }
     }
     private void abrirCamara() {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);

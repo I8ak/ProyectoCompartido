@@ -57,7 +57,7 @@ public class AdministrarMedicina extends AppCompatActivity {
         fabValidar.setOnClickListener(v -> {
             String seleccionado = adapter.getSelectedKey();
             if (seleccionado != null) {
-                new Lanzar(seleccionado, 33333, respuestaServidor -> runOnUiThread(() -> {
+                new Lanzar(seleccionado, 33335, respuestaServidor -> runOnUiThread(() -> {
                     manejarRespuestaServidor(respuestaServidor);
                     Log.i("Mensaje", seleccionado);
                 })).start();
