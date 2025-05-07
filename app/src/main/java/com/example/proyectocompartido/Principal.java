@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 
 public class Principal extends AppCompatActivity {
     private BarcodeScanner scanner;
+    private BarcodeScanner scanner2;
 
 
     @Override
@@ -42,6 +43,7 @@ public class Principal extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_principal2);
         Button button = findViewById(R.id.butonCamara);
+        Button button2 = findViewById(R.id.butonCamara2);
         String usuario=getIntent().getStringExtra("usuario");
         Log.i("Mensaje",usuario);
         button.setOnClickListener(v -> {
@@ -49,9 +51,11 @@ public class Principal extends AppCompatActivity {
             intent.putExtra("usuario",usuario);
             startActivity(intent);
         });
+
+        button2.setOnClickListener(v -> {
+            Intent intent = new Intent(Principal.this, Scanner.class);
+            intent.putExtra("usuario",usuario);
+            startActivity(intent);
+        });
     }
-
-
-
-
 }
