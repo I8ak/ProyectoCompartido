@@ -4,6 +4,7 @@ package com.example.proyectocompartido;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -25,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText textPass;
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
-    private String codbarPaciente;
 
 
     @Override
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //        if (nfcAdapter == null) {
 //            Log.e("NFC", "El dispositivo no soporta NFC o está desactivado");
-//            runOnUiThread(() -> texto.setText("Error: NFC no disponible"));
+//            runOnUiThread(() -> textUser.setText("Error: NFC no disponible"));
 //        }
 //
 //    }
@@ -128,19 +129,7 @@ public class MainActivity extends AppCompatActivity {
 //        if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction()) ||
 //                NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction()) ||
 //                NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-//            JSONObject json=new JSONObject();
-//            char VT = 11;
-//            char FS = 28;
-//            char CR = 13;
-//            try {
-//                json.put("user",textUser.getText());
-//                json.put("password",textPass.getText());
-//            } catch (JSONException e) {
-//                throw new RuntimeException(e);
-//            }
-//            String linea = VT+json.toString().replaceAll("\\s+","")+FS+CR;
-//            Log.i("MENSAJE",linea);
-//            new Lanzar(linea).start();
+//
 //            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 //            if (tag != null && tag.getId() != null) {
 //                String cardID = bytesToHex(tag.getId());
@@ -149,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
 //            } else {
 //                Log.i("NFC", "Error: No se pudo leer la tarjeta NFC");
 //            }
-//
 //        }
 //    }
 //

@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
@@ -27,10 +26,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
-import com.google.zxing.client.android.Intents;
-import com.journeyapps.barcodescanner.CaptureActivity;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 
 import java.util.concurrent.ExecutionException;
 
@@ -38,7 +34,6 @@ public class Scanner extends AppCompatActivity {
     private BarcodeScanner scanner;
     private static String usuario;
     private PreviewView previewView;
-    private static String barcodePaciente;
     private boolean escaneoHecho = false;
 
     @SuppressLint("SuspiciousIndentation")

@@ -28,12 +28,12 @@ public class AdministrarMedicina extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_administrar_medicina);
-
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         String respuesta = getIntent().getStringExtra("respuesta");
+
         try {
+
             JSONObject data = new JSONObject(respuesta);
             JSONArray administr = data.getJSONArray("administr");
             for (int i = 0; i < administr.length(); i++) {
@@ -42,9 +42,11 @@ public class AdministrarMedicina extends AppCompatActivity {
                 String fechaAdministracion = a.getString("fechaAdministracion");
                 medicamentoMap.put(id, fechaAdministracion);
             }
+
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+
         for (Map.Entry<String, String> s : medicamentoMap.entrySet()) {
             Log.i("Clave", s.getKey());
             Log.i("Valor", s.getValue());
@@ -52,10 +54,10 @@ public class AdministrarMedicina extends AppCompatActivity {
 
         adapter = new MyAdapter(medicamentoMap);
         recyclerView.setAdapter(adapter);
-
         MaterialButton fabValidar = findViewById(R.id.fabValidar);
         fabValidar.setOnClickListener(v -> {
             String seleccionado = adapter.getSelectedKey();
+
             if (seleccionado != null) {
                 new Lanzar(seleccionado, 33335, respuestaServidor -> runOnUiThread(() -> {
                     manejarRespuestaServidor(respuestaServidor);
@@ -74,7 +76,7 @@ public class AdministrarMedicina extends AppCompatActivity {
             if (error != null && !error.equals("null")) {
                 Toast.makeText(this, "Usuario correcto", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "Usuario correcto", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Usuario incorrecto", Toast.LENGTH_LONG).show();
             }
         } catch (JSONException e) {
             Toast.makeText(this, "Error procesando la respuesta del servidor", Toast.LENGTH_LONG).show();
