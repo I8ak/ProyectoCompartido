@@ -12,6 +12,8 @@ kotlin = "1.9.22"
 coreKtx = "1.15.0"
 mysqlConnectorJ = "8.3.0"
 retrofit = "2.9.0"
+navigationFragment = "2.8.9"
+navigationUi = "2.8.9"
 
 [libraries]
 constraintlayout-v204 = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayoutVersion" }
@@ -26,6 +28,8 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 mysql-connector-j = { module = "com.mysql:mysql-connector-j", version.ref = "mysqlConnectorJ" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
+navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

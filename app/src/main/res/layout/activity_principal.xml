@@ -9,15 +9,15 @@
     tools:context=".Principal">
 
     <Button
-        android:id="@+id/butonCamara2"
+        android:id="@+id/buttonTubo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="Asignar tubo"
-        app:layout_constraintEnd_toEndOf="@+id/butonCamara"
-        app:layout_constraintHorizontal_bias="0.472"
-        app:layout_constraintStart_toStartOf="@+id/butonCamara"
-        app:layout_constraintTop_toBottomOf="@+id/butonCamara" />
+        android:layout_marginTop="172dp"
+        android:text="Añadir tubo"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintHorizontal_bias="0.541"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/textView"
@@ -34,15 +34,12 @@
         app:layout_constraintVertical_bias="0.295" />
 
     <Button
-        android:id="@+id/butonCamara"
+        android:id="@+id/buttonMedicina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="Escanear paciente"
-        app:layout_constraintEnd_toEndOf="@+id/textView"
-        app:layout_constraintHorizontal_bias="0.522"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
+        android:text="Añadir Medicina"
+        tools:layout_editor_absoluteX="129dp"
+        tools:layout_editor_absoluteY="312dp"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

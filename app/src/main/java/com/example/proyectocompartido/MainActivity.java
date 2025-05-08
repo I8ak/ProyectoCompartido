@@ -4,16 +4,13 @@ package com.example.proyectocompartido;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -83,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 mostrarPopupError(error);
             } else {
                 Toast.makeText(this, "Usuario correcto", Toast.LENGTH_LONG).show();
-                Intent intent=new Intent(MainActivity.this,Principal.class);
+                Intent intent=new Intent(MainActivity.this, AddMedicina.class);
                 intent.putExtra("usuario",textUser.getText().toString().trim());
                 startActivity(intent);
             }

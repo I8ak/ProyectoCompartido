@@ -37,6 +37,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Principal"
+            android:exported="false"
+            android:theme="@style/Theme.ProyectoCompartido" />
+        <activity
             android:name=".Addtubo"
             android:exported="false" />
         <activity
@@ -47,7 +51,7 @@
             android:name=".Medicinas"
             android:exported="false" />
         <activity
-            android:name=".Principal"
+            android:name=".AddMedicina"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
