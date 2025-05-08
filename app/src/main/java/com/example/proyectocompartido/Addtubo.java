@@ -45,6 +45,7 @@ public class Addtubo extends AppCompatActivity {
         Button button = findViewById(R.id.buttonTubo);
         button.setOnClickListener(v -> {
             Intent intent = new Intent(Addtubo.this, Scanner.class);
+            intent.putExtra("accion",Addtubo.class);
             startActivity(intent);
         });
 
@@ -52,7 +53,6 @@ public class Addtubo extends AppCompatActivity {
     private void validarTubo() {
         LocalDateTime fechaEnvio = LocalDateTime.now();
         String fechaFormateada = fechaEnvio.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        String fechaCaducidad=null;
         char VT = 11;
         char FS = 28;
         char CR = 13;
@@ -60,10 +60,9 @@ public class Addtubo extends AppCompatActivity {
         JSONObject json = new JSONObject();
         try {
             json.put("usuario", usuario);
-            json.put("operacion", "validar");
+            json.put("operacion", "añadir");
             json.put("nhc", barcodePaciente);
             json.put("codBarTubo", barcodTubo);
-            json.put("fechaCad", JSONObject.NULL);
             json.put("fechaEnvio", fechaFormateada);
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -72,7 +71,7 @@ public class Addtubo extends AppCompatActivity {
         String linea = json.toString().replaceAll("\\s+", "");
         linea = VT + linea + FS + CR;
 
-        new Lanzar(linea,33335, respuestaServidor -> runOnUiThread(() -> {
+        new Lanzar(linea,33336, respuestaServidor -> runOnUiThread(() -> {
             manejarRespuestaServidor(respuestaServidor);
         })).start();
     }
@@ -86,9 +85,9 @@ public class Addtubo extends AppCompatActivity {
                 mostrarPopupError(error);
             } else {
                 Toast.makeText(this, "Tubo correcta", Toast.LENGTH_LONG).show();
-                Intent intent=new Intent(Addtubo.this,AdministrarMedicina.class);
-                intent.putExtra("respuesta",respuesta);
-                startActivity(intent);
+//                Intent intent=new Intent(Addtubo.this,AdministrarMedicina.class);
+//                intent.putExtra("respuesta",respuesta);
+//                startActivity(intent);
             }
 
         } catch (JSONException e) {

@@ -44,6 +44,7 @@ public class Medicinas extends AppCompatActivity {
         Button button = findViewById(R.id.butonMedicina);
         button.setOnClickListener(v -> {
                 Intent intent = new Intent(Medicinas.this, Scanner.class);
+                intent.putExtra("accion",Medicinas.class);
                 startActivity(intent);
         });
     }

@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 
-public class AddMedicina extends AppCompatActivity {
+public class ScanPaciente extends AppCompatActivity {
     private BarcodeScanner scanner;
 
 
@@ -22,10 +22,12 @@ public class AddMedicina extends AppCompatActivity {
         setContentView(R.layout.activity_addmedicina);
         Button button = findViewById(R.id.butonCamara);
         String usuario=getIntent().getStringExtra("usuario");
+        Class<?> accion = (Class<?>) getIntent().getSerializableExtra("accion");
         Log.i("Mensaje",usuario);
         button.setOnClickListener(v -> {
-            Intent intent = new Intent(AddMedicina.this, Scanner.class);
+            Intent intent = new Intent(ScanPaciente.this, Scanner.class);
             intent.putExtra("usuario",usuario);
+            intent.putExtra("accion",accion);
             startActivity(intent);
         });
     }

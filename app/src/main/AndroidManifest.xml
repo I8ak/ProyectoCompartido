@@ -51,7 +51,7 @@
             android:name=".Medicinas"
             android:exported="false" />
         <activity
-            android:name=".AddMedicina"
+            android:name=".ScanPaciente"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

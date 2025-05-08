@@ -2,6 +2,7 @@ package com.example.proyectocompartido;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.Manifest;
 import android.widget.Button;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +35,7 @@ import java.util.concurrent.ExecutionException;
 public class Scanner extends AppCompatActivity {
     private BarcodeScanner scanner;
     private static String usuario;
+    private static Class<?> accion;
     private PreviewView previewView;
     private boolean escaneoHecho = false;
 
@@ -44,7 +47,9 @@ public class Scanner extends AppCompatActivity {
         setContentView(R.layout.activity_scanner);
         previewView = findViewById(R.id.previewView);
 
-        usuario=getIntent().getStringExtra("usuario");
+        usuario = getIntent().getStringExtra("usuario");
+        accion = (Class<?>) getIntent().getSerializableExtra("accion");
+
         scanner = BarcodeScanning.getClient();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1001);
@@ -53,6 +58,7 @@ public class Scanner extends AppCompatActivity {
             abrirCamara();
         }
     }
+
     private void abrirCamara() {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
@@ -80,14 +86,18 @@ public class Scanner extends AppCompatActivity {
                                             escaneoHecho = true;
                                             String value = barcode.getRawValue();
                                             if (value != null) {
-                                                Intent intent = new Intent(Scanner.this, Medicinas.class);
-                                                intent.putExtra("codEscaneado", value);
-                                                if (usuario!=null){
 
-                                                    intent.putExtra("usuario",usuario);
+
+                                                Intent intent = new Intent(Scanner.this, accion);
+                                                intent.putExtra("codEscaneado", value);
+                                                if (usuario != null) {
+
+                                                    intent.putExtra("usuario", usuario);
                                                 }
                                                 startActivity(intent);
                                                 finish();
+
+
                                             }
                                         }
                                     }
@@ -124,7 +134,6 @@ public class Scanner extends AppCompatActivity {
 
         }
     }
-
 
 
 }

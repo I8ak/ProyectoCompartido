@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 mostrarPopupError(error);
             } else {
                 Toast.makeText(this, "Usuario correcto", Toast.LENGTH_LONG).show();
-                Intent intent=new Intent(MainActivity.this, AddMedicina.class);
+                Intent intent=new Intent(MainActivity.this, Principal.class);
                 intent.putExtra("usuario",textUser.getText().toString().trim());
                 startActivity(intent);
             }

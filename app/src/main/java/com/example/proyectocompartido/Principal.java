@@ -19,19 +19,18 @@ public class Principal extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_principal);
         Button buttonMedicina = findViewById(R.id.buttonMedicina);
+        String usuario=getIntent().getStringExtra("usuario");
         Button buttonTubo = findViewById(R.id.buttonTubo);
-        String medicina = getIntent().getStringExtra("medicina");
-        Log.i("Mensaje",medicina);
         buttonMedicina.setOnClickListener(v -> {
-            Intent intent = new Intent(Principal.this, Scanner.class);
-            intent.putExtra("medicina",medicina);
+            Intent intent = new Intent(Principal.this, ScanPaciente.class);
+            intent.putExtra("usuario",usuario);
+            intent.putExtra("accion",Medicinas.class);
             startActivity(intent);
         });
-        String tubo = getIntent().getStringExtra("tubo");
-        Log.i("Mensaje",tubo);
         buttonTubo.setOnClickListener(v -> {
-            Intent intent = new Intent(Principal.this, Scanner.class);
-            intent.putExtra("tubo",tubo);
+            Intent intent = new Intent(Principal.this, ScanPaciente.class);
+            intent.putExtra("usuario",usuario);
+            intent.putExtra("accion",Addtubo.class);
             startActivity(intent);
         });
     }
