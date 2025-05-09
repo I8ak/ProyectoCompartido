@@ -18,8 +18,8 @@ import java.time.format.DateTimeFormatter;
 
 public class Medicinas extends AppCompatActivity {
 
-    private String barcodePaciente;
-    private  String usuario;
+    private static String barcodePaciente;
+    private String usuario;
     private String barcodeMedicina;
 
     @Override
