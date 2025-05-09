@@ -67,9 +67,13 @@ public class MainActivity extends AppCompatActivity {
         }
         String linea = VT+json.toString().replaceAll("\\s+","")+FS+CR;
         Log.i("MENSAJE",linea);
-        new Lanzar(linea,33333, respuestaServidor -> runOnUiThread(() -> {
-            manejarRespuestaServidor(respuestaServidor);
-        })).start();
+        Thread hilo = new Lanzar(
+                linea,
+                33333,
+                respuestaServidor -> runOnUiThread(() -> manejarRespuestaServidor(respuestaServidor)),
+                error -> runOnUiThread(() -> mostrarPopupError(error))
+        );
+        hilo.start();
     }
     private void manejarRespuestaServidor(String respuesta) {
         try {

@@ -59,10 +59,13 @@ public class AdministrarMedicina extends AppCompatActivity {
             String seleccionado = adapter.getSelectedKey();
 
             if (seleccionado != null) {
-                new Lanzar(seleccionado, 33335, respuestaServidor -> runOnUiThread(() -> {
-                    manejarRespuestaServidor(respuestaServidor);
-                    Log.i("Mensaje", seleccionado);
-                })).start();
+                Thread hilo = new Lanzar(
+                        seleccionado,
+                        33333,
+                        respuestaServidor -> runOnUiThread(() -> manejarRespuestaServidor(respuestaServidor)),
+                        error -> runOnUiThread(() -> mostrarPopupError(error))
+                );
+                hilo.start();
             } else {
                 Toast.makeText(this, "Por favor, selecciona un elemento", Toast.LENGTH_SHORT).show();
             }
@@ -82,5 +85,13 @@ public class AdministrarMedicina extends AppCompatActivity {
             Toast.makeText(this, "Error procesando la respuesta del servidor", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
+    }
+    private void mostrarPopupError(String mensajeError) {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Error")
+                .setMessage(mensajeError)
+                .setPositiveButton("Aceptar", null)
+                .setCancelable(true)
+                .show();
     }
 }

@@ -44,7 +44,6 @@ public class Medicinas extends AppCompatActivity {
         Button button = findViewById(R.id.butonMedicina);
         button.setOnClickListener(v -> {
                 Intent intent = new Intent(Medicinas.this, Scanner.class);
-                intent.putExtra("accion",Medicinas.class);
                 startActivity(intent);
         });
     }
@@ -75,9 +74,13 @@ public class Medicinas extends AppCompatActivity {
         String linea = json.toString().replaceAll("\\s+", "");
         linea = VT + linea + FS + CR;
 
-        new Lanzar(linea,33335, respuestaServidor -> runOnUiThread(() -> {
-            manejarRespuestaServidor(respuestaServidor);
-        })).start();
+        Thread hilo = new Lanzar(
+                linea,
+                33333,
+                respuestaServidor -> runOnUiThread(() -> manejarRespuestaServidor(respuestaServidor)),
+                error -> runOnUiThread(() -> mostrarPopupError(error))
+        );
+        hilo.start();
     }
 
     private void manejarRespuestaServidor(String respuesta) {

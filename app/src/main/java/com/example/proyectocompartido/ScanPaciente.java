@@ -19,7 +19,7 @@ public class ScanPaciente extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_addmedicina);
+        setContentView(R.layout.activity_scanpaciente);
         Button button = findViewById(R.id.butonCamara);
         String usuario=getIntent().getStringExtra("usuario");
         Class<?> accion = (Class<?>) getIntent().getSerializableExtra("accion");
