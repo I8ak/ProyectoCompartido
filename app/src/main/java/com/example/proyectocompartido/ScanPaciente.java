@@ -28,6 +28,7 @@ public class ScanPaciente extends AppCompatActivity {
             Intent intent = new Intent(ScanPaciente.this, Scanner.class);
             intent.putExtra("usuario",usuario);
             intent.putExtra("accion",accion);
+            intent.putExtra("tipo", "paciente");
             startActivity(intent);
         });
     }

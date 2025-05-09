@@ -19,40 +19,44 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Addtubo extends AppCompatActivity {
-    private static String barcodePaciente;
-    private static String usuario;
-    private static String barcodTubo;
+    private  String barcodePaciente;
+    private  String usuario;
+    private  String barcodTubo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_addtubo);
-        String user=getIntent().getStringExtra("usuario");
-        if (user!=null){
-            usuario =user;
-        }
+         usuario=getIntent().getStringExtra("usuario");
 
-        if (barcodePaciente == null) {
-            barcodePaciente = getIntent().getStringExtra("codEscaneado");
-            Log.i("mensaje",barcodePaciente+" uduario "+usuario);
-        }else {
-            barcodTubo = getIntent().getStringExtra("codEscaneado");
-            Log.i("mensaje",barcodTubo+" usuario "+usuario);
+        String tipo = getIntent().getStringExtra("tipo");
+        String codigo = getIntent().getStringExtra("codEscaneado");
+
+        if ("paciente".equals(tipo)) {
+            barcodePaciente = codigo;
+            Log.i("mensaje", "Paciente escaneado: " + barcodePaciente);
+        } else if ("tubo".equals(tipo)) {
+            barcodTubo = codigo;
+            Log.i("mensaje", "Tubo escaneada: " + barcodTubo);
             validarTubo();
         }
 
         Button button = findViewById(R.id.buttonTubo);
         button.setOnClickListener(v -> {
             Intent intent = new Intent(Addtubo.this, Scanner.class);
+            intent.putExtra("accion",Addtubo.class);
+            intent.putExtra("tipo", "tubo");
+            intent.putExtra("usuario", usuario);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
+            finish();
         });
 
     }
     private void validarTubo() {
         LocalDateTime fechaEnvio = LocalDateTime.now();
         String fechaFormateada = fechaEnvio.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        String fechaCaducidad=null;
         char VT = 11;
         char FS = 28;
         char CR = 13;
@@ -60,10 +64,9 @@ public class Addtubo extends AppCompatActivity {
         JSONObject json = new JSONObject();
         try {
             json.put("usuario", usuario);
-            json.put("operacion", "validar");
+            json.put("operacion", "añadir");
             json.put("nhc", barcodePaciente);
             json.put("codBarTubo", barcodTubo);
-            json.put("fechaCad", JSONObject.NULL);
             json.put("fechaEnvio", fechaFormateada);
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -74,7 +77,7 @@ public class Addtubo extends AppCompatActivity {
 
         Thread hilo = new Lanzar(
                 linea,
-                33333,
+                33336,
                 respuestaServidor -> runOnUiThread(() -> manejarRespuestaServidor(respuestaServidor)),
                 error -> runOnUiThread(() -> mostrarPopupError(error))
         );
@@ -90,9 +93,9 @@ public class Addtubo extends AppCompatActivity {
                 mostrarPopupError(error);
             } else {
                 Toast.makeText(this, "Tubo correcta", Toast.LENGTH_LONG).show();
-                Intent intent=new Intent(Addtubo.this,AdministrarMedicina.class);
-                intent.putExtra("respuesta",respuesta);
-                startActivity(intent);
+//                Intent intent=new Intent(Addtubo.this,AdministrarMedicina.class);
+//                intent.putExtra("respuesta",respuesta);
+//                startActivity(intent);
             }
 
         } catch (JSONException e) {

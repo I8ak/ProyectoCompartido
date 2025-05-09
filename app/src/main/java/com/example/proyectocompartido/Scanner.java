@@ -34,8 +34,9 @@ import java.util.concurrent.ExecutionException;
 
 public class Scanner extends AppCompatActivity {
     private BarcodeScanner scanner;
-    private static String usuario;
-    private static Class<?> accion;
+    private  String usuario;
+    private  String tipo;
+    private  Class<?> accion;
     private PreviewView previewView;
     private boolean escaneoHecho = false;
 
@@ -49,6 +50,7 @@ public class Scanner extends AppCompatActivity {
 
         usuario = getIntent().getStringExtra("usuario");
         accion = (Class<?>) getIntent().getSerializableExtra("accion");
+        tipo = getIntent().getStringExtra("tipo");
 
         scanner = BarcodeScanning.getClient();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -93,6 +95,7 @@ public class Scanner extends AppCompatActivity {
                                                 if (usuario != null) {
 
                                                     intent.putExtra("usuario", usuario);
+                                                    intent.putExtra("tipo", tipo);
                                                 }
                                                 startActivity(intent);
                                                 finish();

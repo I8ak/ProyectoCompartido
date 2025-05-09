@@ -18,8 +18,8 @@ import java.time.format.DateTimeFormatter;
 
 public class Medicinas extends AppCompatActivity {
 
-    private static String barcodePaciente;
-    private static String usuario;
+    private String barcodePaciente;
+    private  String usuario;
     private String barcodeMedicina;
 
     @Override
@@ -27,24 +27,30 @@ public class Medicinas extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_medicinas);
-        String user=getIntent().getStringExtra("usuario");
-        if (user!=null){
-            usuario =user;
-        }
+         usuario=getIntent().getStringExtra("usuario");
 
-        if (barcodePaciente == null) {
-            barcodePaciente = getIntent().getStringExtra("codEscaneado");
-            Log.i("mensaje",barcodePaciente+" uduario "+usuario);
-        }else {
-            barcodeMedicina = getIntent().getStringExtra("codEscaneado");
-            Log.i("mensaje",barcodeMedicina+" usuario "+usuario);
+
+        String tipo = getIntent().getStringExtra("tipo");
+        String codigo = getIntent().getStringExtra("codEscaneado");
+
+        if ("paciente".equals(tipo)) {
+            barcodePaciente = codigo;
+            Log.i("mensaje", "Paciente escaneado: " + barcodePaciente);
+        } else if ("medicina".equals(tipo)) {
+            barcodeMedicina = codigo;
+            Log.i("mensaje", "Medicina escaneada: " + barcodeMedicina);
             validarMedicina();
         }
 
         Button button = findViewById(R.id.butonMedicina);
         button.setOnClickListener(v -> {
                 Intent intent = new Intent(Medicinas.this, Scanner.class);
+                intent.putExtra("accion",Medicinas.class);
+                intent.putExtra("tipo", "medicina");
+                intent.putExtra("usuario", usuario);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
+                finish();
         });
     }
 
@@ -76,7 +82,7 @@ public class Medicinas extends AppCompatActivity {
 
         Thread hilo = new Lanzar(
                 linea,
-                33333,
+                33335,
                 respuestaServidor -> runOnUiThread(() -> manejarRespuestaServidor(respuestaServidor)),
                 error -> runOnUiThread(() -> mostrarPopupError(error))
         );

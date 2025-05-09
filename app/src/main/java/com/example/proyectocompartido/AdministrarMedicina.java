@@ -61,7 +61,7 @@ public class AdministrarMedicina extends AppCompatActivity {
             if (seleccionado != null) {
                 Thread hilo = new Lanzar(
                         seleccionado,
-                        33333,
+                        33335,
                         respuestaServidor -> runOnUiThread(() -> manejarRespuestaServidor(respuestaServidor)),
                         error -> runOnUiThread(() -> mostrarPopupError(error))
                 );
